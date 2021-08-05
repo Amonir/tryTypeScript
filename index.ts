@@ -98,24 +98,24 @@ getUserSelection().then((selection: any) => {
 
 
 				// solution 3 didn't work
-				const readInterface = readline.createInterface({
-					input: fs.createReadStream('users.txt'),
-					// output: process.stdout,
-					console: false,
-				});
-				readInterface.on('line', (line: any) => {
-					savedUserInfo = line;
-					// console.log(line,'====', savedUserInfo,'compared to ', userLoginInfo)
-					console.log(userLoginInfo['username'], savedUserInfo['username']);
-					if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
-						console.log('welcome home', userLoginInfo['username']);
-						const currentUser = userLoginInfo['username'];
-					} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
-						console.log('Password is wrong');
-					} else {
-						console.log('Entered username does not exist ');
-					}
-				});
+				// const readInterface = readline.createInterface({
+				// 	input: fs.createReadStream('users.txt'),
+				// 	// output: process.stdout,
+				// 	console: false,
+				// });
+				// readInterface.on('line', (line: any) => {
+				// 	savedUserInfo = line;
+				// 	// console.log(line,'====', savedUserInfo,'compared to ', userLoginInfo)
+				// 	console.log(userLoginInfo['username'], savedUserInfo['username']);
+				// 	if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+				// 		console.log('welcome home', userLoginInfo['username']);
+				// 		const currentUser = userLoginInfo['username'];
+				// 	} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+				// 		console.log('Password is wrong');
+				// 	} else {
+				// 		console.log('Entered username does not exist ');
+				// 	}
+				// });
 
 				// solution 2 didn't work
 				// readLineFromFile('users.txt').then((line: any) => {
@@ -133,27 +133,28 @@ getUserSelection().then((selection: any) => {
 
 				// solution 1 didn't work
 
-				// const readInterface = readline.createInterface({
-				// 	input: fs.createReadStream('users.txt'),
-				// 	// output: process.stdout,
-				// 	console: false,
-				// });
-				// (async function () {
-				// 	for await (const line of readInterface) {
-				// 		savedUserInfo = line;
-				// 		console.log(line)
-				// 		if ( userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
-				// 			console.log('welcome home', userLoginInfo['username']);
-				// 			const currentUser = userLoginInfo['username']
+				const readInterface = readline.createInterface({
+					input: fs.createReadStream('users.txt'),
+					// output: process.stdout,
+					console: false,
+				});
+				(async function () {
+					for await (const line of readInterface) {
+						savedUserInfo = line;
+						console.log(line)
+						console.log(userLoginInfo['username'], savedUserInfo['username']);
+						if ( userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+							console.log('welcome home', userLoginInfo['username']);
+							const currentUser = userLoginInfo['username']
 
-				// 			break
-				// 		} else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
-				// 			console.log('Password is wrong');
-				// 		} else {
-				// 			console.log('Entered username does not exist ');
-				// 		}
-				// 	}
-				// })();
+							break
+						} else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
+							console.log('Password is wrong');
+						} else {
+							console.log('Entered username does not exist ');
+						}
+					}
+				})();
 			});
 			break;
 		}
