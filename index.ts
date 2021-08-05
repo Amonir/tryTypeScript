@@ -1,12 +1,12 @@
-// import prompts from 'prompts';
-// import fs from 'fs';
-
 const prompts = require('prompts');
 const fs = require('fs');
+const readline = require('readline');
 let username: string;
 let password: string;
-let path = 'users.txt';
+// let path = 'users.txt';
 let firstSelection: { [key: string]: string };
+let savedUserInfo: { [key: string]: string };
+let userLoginInfo: { [key: string]: string };
 
 const selectionQuestions = [
 	{
@@ -34,10 +34,18 @@ const register = [
 	},
 ];
 
-// (async  () => {
-// 	const response = await prompts(selectionQuestions);
-//   return response
-// })();
+const login = [
+	{
+		type: 'text',
+		name: 'username',
+		message: 'please enter your username?',
+	},
+	{
+		type: 'password',
+		name: 'password',
+		message: 'please enter your password?',
+	},
+];
 
 async function getUserSelection(): Promise<any> {
 	const response = await prompts(selectionQuestions);
@@ -49,6 +57,29 @@ async function getRegistration(): Promise<any> {
 	return response;
 }
 
+async function getLogin(): Promise<any> {
+	const response = await prompts(login);
+	return response;
+}
+
+// solution 2 didn't work
+// function readLineFromFile(filePath: string): any {
+// 	const readInterface = readline.createInterface({
+// 		input: fs.createReadStream(filePath),
+// 		// output: process.stdout,
+// 		console: false,
+// 	});
+// 	  readInterface.on('line', (line: any) => {
+// 		console.log(line)
+// 		return line;
+// 	});
+
+// for loop didn't work
+// for await (const line of readInterface) {
+// 	console.log(line)
+// 	return line;
+// }
+// }
 
 console.log('Welcome to our Notes app');
 
@@ -61,14 +92,73 @@ getUserSelection().then((selection: any) => {
 		}
 		case 'login': {
 			console.log('activate login app!');
+			getLogin().then((loginInfo: any) => {
+				userLoginInfo = loginInfo;
+				console.log('Entered Username: ', userLoginInfo['username']);
+				const readInterface = readline.createInterface({
+					input: fs.createReadStream('users.txt'),
+					// output: process.stdout,
+					console: false,
+				});
+				readInterface.on('line', (line: any) => {
+					savedUserInfo = line;
+					// console.log(line,'====', savedUserInfo,'compared to ', userLoginInfo)
+					console.log(userLoginInfo['username'], savedUserInfo['username'] )
+					if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+						console.log('welcome home', userLoginInfo['username']);
+						const currentUser = userLoginInfo['username'];
+					} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+						console.log('Password is wrong');
+					} else {
+						console.log('Entered username does not exist ');
+					}
+				});
+
+				// solution 2 didn't work
+				// readLineFromFile('users.txt').then((line: any) => {
+				// 	savedUserInfo = line;
+				// 	console.log(savedUserInfo);
+				// 	if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+				// 		console.log('welcome home', userLoginInfo['username']);
+				// 		const currentUser = userLoginInfo['username'];
+				// 	} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+				// 		console.log('Password is wrong');
+				// 	} else {
+				// 		console.log('Entered username does not exist ');
+				// 	}
+				// });
+
+				// solution 1 didn't work
+
+				// const readInterface = readline.createInterface({
+				// 	input: fs.createReadStream('users.txt'),
+				// 	// output: process.stdout,
+				// 	console: false,
+				// });
+				// (async function () {
+				// 	for await (const line of readInterface) {
+				// 		savedUserInfo = line;
+				// 		console.log(line)
+				// 		if ( userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+				// 			console.log('welcome home', userLoginInfo['username']);
+				// 			const currentUser = userLoginInfo['username']
+
+				// 			break
+				// 		} else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
+				// 			console.log('Password is wrong');
+				// 		} else {
+				// 			console.log('Entered username does not exist ');
+				// 		}
+				// 	}
+				// })();
+			});
 			break;
 		}
 		case 'register': {
 			getRegistration().then((registration: any) => {
-				console.log(registration);
-				fs.appendFile('users.txt', registration, function (err) {
-				  if (err) throw err;
-				  console.log('Saved!');
+				fs.appendFile('users.txt', JSON.stringify(registration) + '\n', function (err) {
+					if (err) throw err;
+					console.log('Saved!');
 				});
 			});
 			break;
@@ -79,40 +169,3 @@ getUserSelection().then((selection: any) => {
 		}
 	}
 });
-
-
-// console.log(firstSelection);
-
-// switch (firstSelection['selection']) {
-// 	case 'guest': {
-// 		console.log('activate guest app!');
-// 		break;
-// 	}
-// 	case 'login': {
-// 		console.log('activate login app!');
-// 		break;
-// 	}
-// 	case 'register': {
-// 		console.log('activate register app!');
-// 		break;
-// 	}
-// 	default: {
-// 		console.log('wrong choice obviously!!');
-// 		break;
-// 	}
-// }
-
-// Asynchronously:
-
-// const fs = require('fs');
-
-// fs.appendFile('message.txt', 'data to append', function (err) {
-//   if (err) throw err;
-//   console.log('Saved!');
-// });
-
-// Synchronously:
-
-// const fs = require('fs');
-
-// fs.appendFileSync('message.txt', 'data to append');
