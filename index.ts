@@ -100,6 +100,7 @@ getUserSelection().then((selection: any) => {
 					// output: process.stdout,
 					console: false,
 				});
+				// solution 3 didn't work
 				readInterface.on('line', (line: any) => {
 					savedUserInfo = line;
 					// console.log(line,'====', savedUserInfo,'compared to ', userLoginInfo)
