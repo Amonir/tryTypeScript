@@ -95,16 +95,18 @@ getUserSelection().then((selection: any) => {
 			getLogin().then((loginInfo: any) => {
 				userLoginInfo = loginInfo;
 				console.log('Entered Username: ', userLoginInfo['username']);
+
+
+				// solution 3 didn't work
 				const readInterface = readline.createInterface({
 					input: fs.createReadStream('users.txt'),
 					// output: process.stdout,
 					console: false,
 				});
-				// solution 3 didn't work
 				readInterface.on('line', (line: any) => {
 					savedUserInfo = line;
 					// console.log(line,'====', savedUserInfo,'compared to ', userLoginInfo)
-					console.log(userLoginInfo['username'], savedUserInfo['username'] )
+					console.log(userLoginInfo['username'], savedUserInfo['username']);
 					if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
 						console.log('welcome home', userLoginInfo['username']);
 						const currentUser = userLoginInfo['username'];
