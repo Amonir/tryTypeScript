@@ -131,7 +131,7 @@ getUserSelection().then((selection: any) => {
 				// 	}
 				// });
 
-				// solution 1 didn't work
+				// solution 1 working 
 
 				const readInterface = readline.createInterface({
 					input: fs.createReadStream('users.txt'),
@@ -139,20 +139,28 @@ getUserSelection().then((selection: any) => {
 					console: false,
 				});
 				(async function () {
+					var usersDict = new Array();
 					for await (const line of readInterface) {
-						savedUserInfo = line;
-						console.log(line)
-						console.log(userLoginInfo['username'], savedUserInfo['username']);
+						// savedUserInfo = JSON.parse(line);
+						usersDict.push(JSON.parse(line))
+					}
+					let userExists = false
+					let currentUser;
+					usersDict.forEach(savedUserInfo => {
 						if ( userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
 							console.log('welcome home', userLoginInfo['username']);
-							const currentUser = userLoginInfo['username']
-
-							break
-						} else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
-							console.log('Password is wrong');
-						} else {
-							console.log('Entered username does not exist ');
+							currentUser = userLoginInfo['username']
+							userExists = true
+							return;
 						}
+						else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
+							console.log('Password is wrong');
+							userExists = true
+							return
+						}
+					});
+					if(!userExists){
+						console.log('Entered username does not exist ');
 					}
 				})();
 			});
