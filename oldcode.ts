@@ -63,3 +63,46 @@
 // });
 
 
+
+
+	// solution 2 didn't work
+    // readLineFromFile('users.txt').then((line: any) => {
+    //     savedUserInfo = line;
+    //     console.log(savedUserInfo);
+    //     if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+    //         console.log('welcome home', userLoginInfo['username']);
+    //         const currentUser = userLoginInfo['username'];
+    //     } else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+    //         console.log('Password is wrong');
+    //     } else {
+    //         console.log('Entered username does not exist ');
+    //     }
+    // });
+
+
+
+
+    // console.log("val",x)
+					// var usersDict = new Array();
+					// usersDict.push(JSON.parse(line));
+					// console.log(usersDict)
+					
+					// let userExists = false;
+					// let currentUser;
+					// console.log(usersDict)
+					// usersDict.forEach((savedUserInfo) => {
+					// 	if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+					// 		console.log('welcome home', userLoginInfo['username']);
+					// 		currentUser = userLoginInfo['username'];
+					// 		userExists = true;
+					// 		return;
+					// 	} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+					// 		console.log('Password is wrong');
+					// 		userExists = true;
+					// 		return;
+					// 	}
+					// });
+					// if (!userExists) {
+					// 	console.log('Entered username does not exist ');
+					// }
+				// });

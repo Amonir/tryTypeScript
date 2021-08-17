@@ -63,17 +63,21 @@ async function getLogin(): Promise<any> {
 }
 
 // solution 2 didn't work
-// function readLineFromFile(filePath: string): any {
-// 	const readInterface = readline.createInterface({
-// 		input: fs.createReadStream(filePath),
-// 		// output: process.stdout,
-// 		console: false,
-// 	});
-// 	  readInterface.on('line', (line: any) => {
-// 		console.log(line)
-// 		return line;
-// 	});
-
+async function readLineFromFile(filePath: string): Promise<any>{
+	return new Promise(resolve => {
+		const readInterface = readline.createInterface({
+			input: fs.createReadStream(filePath),
+			// output: process.stdout,
+			console: false,
+		});
+		let lines: Array<string> = [];
+		readInterface.on('line', (line: any) => {
+			lines.push(line)
+			resolve(lines)
+		});
+	});
+	
+}
 // for loop didn't work
 // for await (const line of readInterface) {
 // 	console.log(line)
@@ -96,7 +100,6 @@ getUserSelection().then((selection: any) => {
 				userLoginInfo = loginInfo;
 				console.log('Entered Username: ', userLoginInfo['username']);
 
-
 				// solution 3 didn't work
 				// const readInterface = readline.createInterface({
 				// 	input: fs.createReadStream('users.txt'),
@@ -117,52 +120,67 @@ getUserSelection().then((selection: any) => {
 				// 	}
 				// });
 
-				// solution 2 didn't work
-				// readLineFromFile('users.txt').then((line: any) => {
-				// 	savedUserInfo = line;
-				// 	console.log(savedUserInfo);
-				// 	if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
-				// 		console.log('welcome home', userLoginInfo['username']);
-				// 		const currentUser = userLoginInfo['username'];
-				// 	} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
-				// 		console.log('Password is wrong');
-				// 	} else {
-				// 		console.log('Entered username does not exist ');
-				// 	}
-				// });
-
-				// solution 1 working 
-
-				const readInterface = readline.createInterface({
-					input: fs.createReadStream('users.txt'),
-					// output: process.stdout,
-					console: false,
-				});
-				(async function () {
+				// solution 2  working
+				readLineFromFile('users.txt').then((lines) => {
+					// console.log("lines :",JSON.parse(lines[0]))
 					var usersDict = new Array();
-					for await (const line of readInterface) {
-						// savedUserInfo = JSON.parse(line);
-						usersDict.push(JSON.parse(line))
+					for (var singleLine of lines){
+						usersDict.push(JSON.parse(singleLine))
 					}
-					let userExists = false
-					let currentUser;
-					usersDict.forEach(savedUserInfo => {
-						if ( userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+					// console.log("user dictionary :",usersDict[0].username)
+					
+					let userExists = false;
+					let currentUser: string;
+					usersDict.forEach((savedUserInfo) => {
+						if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
 							console.log('welcome home', userLoginInfo['username']);
-							currentUser = userLoginInfo['username']
-							userExists = true
+							currentUser = userLoginInfo['username'];
+							userExists = true;
+							return;
+						} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+							console.log('Password is wrong');
+							userExists = true;
 							return;
 						}
-						else if ( userLoginInfo['username'] == savedUserInfo['username'] &&  userLoginInfo['password'] != savedUserInfo['password']) {
-							console.log('Password is wrong');
-							userExists = true
-							return
-						}
 					});
-					if(!userExists){
+					if (!userExists) {
 						console.log('Entered username does not exist ');
 					}
-				})();
+				});
+				
+
+				// solution 1 working
+
+				// const readInterface = readline.createInterface({
+				// 	input: fs.createReadStream('users.txt'),
+				// 	// output: process.stdout,
+				// 	console: false,
+				// });
+
+				// (async function () {
+				// 	var usersDict = new Array();
+				// 	for await (const line of readInterface) {
+				// 		// savedUserInfo = JSON.parse(line);
+				// 		usersDict.push(JSON.parse(line));
+				// 	}
+				// 	let userExists = false;
+				// 	let currentUser;
+				// 	usersDict.forEach((savedUserInfo) => {
+				// 		if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] == savedUserInfo['password']) {
+				// 			console.log('welcome home', userLoginInfo['username']);
+				// 			currentUser = userLoginInfo['username'];
+				// 			userExists = true;
+				// 			return;
+				// 		} else if (userLoginInfo['username'] == savedUserInfo['username'] && userLoginInfo['password'] != savedUserInfo['password']) {
+				// 			console.log('Password is wrong');
+				// 			userExists = true;
+				// 			return;
+				// 		}
+				// 	});
+				// 	if (!userExists) {
+				// 		console.log('Entered username does not exist ');
+				// 	}
+				// })();
 			});
 			break;
 		}
